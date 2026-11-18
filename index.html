@@ -23,7 +23,7 @@ body{font-family:var(--body);background:var(--bg);color:var(--ink);font-size:17p
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
 
-/* Header */
+/* Header & Motion Banner */
 .top{background:var(--teal-d);color:#fff;padding:22px clamp(16px,4vw,48px) 26px}
 .top-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1320px;margin:0 auto}
 .mark{width:52px;height:52px;border-radius:16px 16px 16px 4px;background:var(--saffron);color:var(--teal-d);display:grid;place-items:center;font:800 28px var(--display)}
@@ -36,7 +36,22 @@ button{font:inherit;color:inherit;cursor:pointer}
 .find input{width:100%;border:0;border-radius:18px;padding:18px 22px 18px 58px;font:500 20px var(--body);background:#fff;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .find input::placeholder{color:#7E9190}
 .find svg{position:absolute;left:20px;top:50%;translate:0 -50%;width:24px;height:24px;stroke:var(--teal);fill:none;stroke-width:2.4;stroke-linecap:round}
-.hint{max-width:1320px;margin:10px auto 0;font-size:14px;color:#B9D3D0}
+
+/* Welcome Animation Banner */
+.welcome-banner{
+  background:linear-gradient(135deg, var(--teal), var(--teal-d));
+  color:#fff;
+  text-align:center;
+  padding:14px 20px;
+  font:700 clamp(16px,2vw,20px) var(--display);
+  letter-spacing:.02em;
+  box-shadow:inset 0 -2px 0 var(--saffron);
+  animation: slideDown .6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-16px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
 /* Tabs */
 .tabs{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
@@ -113,17 +128,27 @@ tr:hover td{background:#F5FAF9}
 .fee td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
 .fee th{background:var(--teal-l);color:var(--teal-d);padding:9px 20px}
 
-/* QR */
+/* QR and Centered Backdrop Blur Dialog */
 .qr{text-align:center;cursor:zoom-in;transition:translate .15s}
 .qr:hover{translate:0 -4px}
 .qr img{width:100%;max-width:220px;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#fff}
 .qr h3{font:700 18px/1.25 var(--display);margin:12px 0 4px}
 .qr a{font-size:13px;color:var(--teal);word-break:break-all}
-dialog{border:0;border-radius:26px;padding:28px;max-width:min(92vw,560px);text-align:center}
-dialog::backdrop{background:rgba(8,54,58,.75)}
-dialog img{width:100%;max-width:460px}
-dialog h3{font:800 26px var(--display);margin-bottom:12px}
-dialog button{margin-top:14px;background:var(--teal);color:#fff;border:0;border-radius:12px;padding:12px 28px;font-weight:600}
+
+dialog{
+  border:0; border-radius:26px; padding:32px; max-width:min(90vw,480px); width:100%; text-align:center;
+  background:var(--surface); box-shadow:0 25px 50px rgba(0,0,0,.3);
+  position:fixed; inset:0; margin:auto; /* Ensures absolute centering */
+}
+dialog::backdrop{
+  background:rgba(8,54,58,0.6);
+  backdrop-filter:blur(8px); /* Frosted blur background */
+  -webkit-backdrop-filter:blur(8px);
+}
+dialog img{width:100%; max-width:320px; aspect-ratio:1; object-fit:contain; border-radius:16px; background:#fff; border:1px solid var(--line); margin-bottom:14px}
+dialog h3{font:800 22px var(--display); margin-bottom:16px; color:var(--teal-d)}
+dialog button{background:var(--teal-d); color:#fff; border:0; border-radius:12px; padding:12px 32px; font-weight:600; width:100%; transition:background .15s}
+dialog button:hover{background:var(--teal)}
 
 /* Search results */
 .res{display:grid;gap:10px}
@@ -227,14 +252,22 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
     <input id="q" type="search" autocomplete="off" placeholder="Find an officer, extension, Nice class or fee" aria-label="Search the guide">
   </div>
-  <p class="hint">Try “Iroshi”, “212”, “class 25”, “renewal” or “opposition”. Press / to jump here.</p>
 </header>
+
+<!-- Motion Welcome Banner -->
+<div class="welcome-banner">
+  ✦ Welcome to NIPO Information Desk — Fast Access Guide & AI Assistant ✦
+</div>
 
 <nav class="tabs" aria-label="Sections"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
 <main id="view" aria-live="polite"></main>
 <footer>Copyright © SANDARUWAN.NIPO</footer>
 
-<dialog id="dlg"><h3 id="dt"></h3><img id="di" alt=""><br><button onclick="dlg.close()">Close</button></dialog>
+<dialog id="dlg">
+  <h3 id="dt"></h3>
+  <img id="di" alt="">
+  <button onclick="dlg.close()">Close</button>
+</dialog>
 
 <!-- Gemini Information Officer Floating Button & Popup -->
 <button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPop">
@@ -370,7 +403,7 @@ const FEES=[
 const PUB=[["1 – 10","2,360.00","5,664.00"],["10 – 20","4,071.00","7,375.00"],["More than 20","5,664.00","8,968.00"]];
 
 const QR=[
- ["Gazette publication","gazette.png","https://documents.gov.lk/web/gazettes"],
+ ["Gazette publication","qr/gazette.png","https://documents.gov.lk/web/gazettes"],
  ["NIPO website","qr/nipo.png","https://www.nipo.gov.lk/web/index.php?lang=en"],
  ["WIPO website","qr/wipo.png","https://branddb.wipo.int/"],
  ["MGS goods list","qr/mgs.png","https://webaccess.wipo.int/mgs/"],

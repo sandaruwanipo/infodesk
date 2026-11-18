@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIPO Information Desk</title>
+<meta name="description" content="Information desk guide for NIPO officers">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF0EE; --surface:#fff; --ink:#0D2627; --muted:#566A6B; --line:#D3DDDA;
+  --teal:#0E4F54; --teal-d:#08363A; --teal-l:#DCEBE8;
+  --saffron:#F2A900; --saffron-l:#FFF0C7; --saffron-ink:#5E4200;
+  --maroon:#7E1B2A; --maroon-l:#F6E3E5;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:90px}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);font-size:17px;line-height:1.5;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+
+/* Header */
+.top{background:var(--teal-d);color:#fff;padding:22px clamp(16px,4vw,48px) 26px}
+.top-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1320px;margin:0 auto}
+.mark{width:52px;height:52px;border-radius:16px 16px 16px 4px;background:var(--saffron);color:var(--teal-d);display:grid;place-items:center;font:800 28px var(--display)}
+.brand h1{font:800 clamp(24px,3.4vw,34px)/1.1 var(--display);letter-spacing:-.01em}
+.brand p{font-size:14px;color:#B9D3D0;margin-top:2px}
+.hot{margin-left:auto;display:flex;gap:12px;flex-wrap:wrap}
+.hot a,.hot div{background:rgba(255,255,255,.09);border-radius:12px;padding:8px 14px;font-size:14px;color:#D8E8E6;text-decoration:none}
+.hot b{display:block;font:700 20px var(--display);color:#fff;line-height:1.2}
+.find{max-width:1320px;margin:22px auto 0;position:relative}
+.find input{width:100%;border:0;border-radius:18px;padding:18px 22px 18px 58px;font:500 20px var(--body);background:#fff;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.find input::placeholder{color:#7E9190}
+.find svg{position:absolute;left:20px;top:50%;translate:0 -50%;width:24px;height:24px;stroke:var(--teal);fill:none;stroke-width:2.4;stroke-linecap:round}
+.hint{max-width:1320px;margin:10px auto 0;font-size:14px;color:#B9D3D0}
+
+/* Tabs */
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs-in{display:flex;gap:4px;overflow-x:auto;max-width:1320px;margin:0 auto;padding:0 clamp(16px,4vw,48px);scrollbar-width:none}
+.tab{background:none;border:0;padding:16px 16px 13px;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:4px solid transparent}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected=true]{color:var(--teal-d);border-color:var(--saffron)}
+
+/* Content */
+main{max-width:1320px;margin:0 auto;padding:30px clamp(16px,4vw,48px) 40px}
+.vh{margin-bottom:22px}
+.vh h2{font:800 clamp(26px,3vw,34px)/1.15 var(--display);letter-spacing:-.01em}
+.vh p{color:var(--muted);margin-top:4px}
+.view{animation:in .22s ease-out}
+@keyframes in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}}
+
+.x{display:inline-block;background:var(--saffron-l);color:var(--saffron-ink);font-weight:700;font-size:.82em;padding:1px 8px;border-radius:7px;margin-left:8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;align-items:start}
+
+/* Contact */
+.contact{display:grid;grid-template-columns:minmax(260px,5fr) 7fr;gap:18px}
+.hotline{background:var(--maroon);color:#fff;border-radius:26px 26px 26px 6px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px}
+.hotline span{font-size:18px;color:#F2CFD3}
+.hotline strong{font:800 clamp(80px,11vw,140px)/.95 var(--display);letter-spacing:-.04em}
+.hotline small{font-size:15px;color:#F2CFD3}
+.rows{display:grid;gap:0}
+.row{padding:16px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:150px 1fr;gap:12px}
+.row:last-child{border:0}
+.row dt{color:var(--muted);font-weight:600}
+.row dd{font-weight:600;font-size:19px;margin:0}
+.row dd span{display:block}
+
+/* Intercom */
+.ic h3{font:700 20px var(--display);margin-bottom:8px}
+.ic ul{list-style:none;padding:0}
+.ic li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline}
+.ic li:first-child{border-top:0}
+.ic .x{font-size:17px;margin:0}
+
+/* Tables */
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th{background:var(--teal);color:#fff;text-align:left;padding:13px 16px;font-weight:600;font-size:15px}
+td{padding:12px 16px;border-top:1px solid var(--line);vertical-align:top}
+tbody.g{border-top:2px solid var(--line)}
+tbody.g tr:first-child td{border-top:0}
+tr:hover td{background:#F5FAF9}
+.pill{display:inline-block;background:var(--teal-l);color:var(--teal-d);font-weight:700;padding:2px 10px;border-radius:999px;font-size:.92em}
+.note{color:var(--muted);font-size:.88em;margin-left:6px}
+.old{font-weight:700}
+
+/* Duties */
+.duty h3{font:700 19px/1.25 var(--display);margin-bottom:12px}
+.duty div{display:flex;flex-wrap:wrap;gap:8px}
+.duty span{background:var(--teal-l);border-radius:10px;padding:5px 12px;font-weight:600;color:var(--teal-d)}
+.duty .x{margin-left:6px}
+
+/* Months */
+.months{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.mo h3{font:800 26px var(--display);margin-bottom:6px}
+.mo p{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.mo p span{border:1.5px solid var(--line);border-radius:10px;padding:3px 11px;font-weight:600}
+.sub{font:700 22px var(--display);margin:34px 0 14px}
+
+/* Fees */
+.fees{columns:3 330px;column-gap:18px}
+.fee{break-inside:avoid;margin-bottom:18px;padding:0;overflow:hidden}
+.fee h3{font:700 18px var(--display);padding:16px 20px;background:var(--saffron-l);color:var(--saffron-ink)}
+.fee table{min-width:0}
+.fee td{padding:11px 20px}
+.fee tr:first-child td{border-top:0}
+.fee td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.fee th{background:var(--teal-l);color:var(--teal-d);padding:9px 20px}
+
+/* QR */
+.qr{text-align:center;cursor:zoom-in;transition:translate .15s}
+.qr:hover{translate:0 -4px}
+.qr img{width:100%;max-width:220px;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#fff}
+.qr h3{font:700 18px/1.25 var(--display);margin:12px 0 4px}
+.qr a{font-size:13px;color:var(--teal);word-break:break-all}
+dialog{border:0;border-radius:26px;padding:28px;max-width:min(92vw,560px);text-align:center}
+dialog::backdrop{background:rgba(8,54,58,.75)}
+dialog img{width:100%;max-width:460px}
+dialog h3{font:800 26px var(--display);margin-bottom:12px}
+dialog button{margin-top:14px;background:var(--teal);color:#fff;border:0;border-radius:12px;padding:12px 28px;font-weight:600}
+
+/* Search results */
+.res{display:grid;gap:10px}
+.hit{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;text-align:left;width:100%}
+.hit:hover{border-color:var(--teal);background:#F5FAF9}
+.hit b{display:block;font-size:18px}
+.hit span{color:var(--muted);font-size:15px}
+.hit em{margin-left:auto;font-style:normal;background:var(--teal-l);color:var(--teal-d);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;white-space:nowrap}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:18px;padding:34px;text-align:center;color:var(--muted)}
+
+footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px}
+@media (max-width:760px){.contact{grid-template-columns:1fr}.row{grid-template-columns:1fr;gap:2px}.hot{margin-left:0}}
+@media print{.top,.tabs{display:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <div class="mark" aria-hidden="true">N</div>
+    <div class="brand">
+      <h1>NIPO Information Desk</h1>
+      <p>National Intellectual Property Office of Sri Lanka. Updated 13.08.2026</p>
+    </div>
+    <div class="hot">
+      <div>Hotline<b>1934</b></div>
+      <div>Information desk<b>Ext 200</b></div>
+    </div>
+  </div>
+  <div class="find">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+    <input id="q" type="search" autocomplete="off" placeholder="Find an officer, extension, Nice class or fee" aria-label="Search the guide">
+  </div>
+  <p class="hint">Try “Iroshi”, “212”, “class 25”, “renewal” or “opposition”. Press / to jump here.</p>
+</header>
+
+<nav class="tabs" aria-label="Sections"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
+<main id="view" aria-live="polite"></main>
+<footer>Copyright © SANDARUWAN.NIPO</footer>
+
+<dialog id="dlg"><h3 id="dt"></h3><img id="di" alt=""><br><button onclick="dlg.close()">Close</button></dialog>
+
+<script>
+/* ---------- Data ---------- */
+const EXT={sithara:210,prabashwara:210,prabashara:210,kavith:210,iroshi:212,ravimini:212,nayomi:212,jayantha:213,upekha:213,ashani:214,isuri:214,ajith:214,nadeeka:214,achini:222,sandaruwan:222,deshanthi:222};
+const nm=n=>{const e=EXT[n.split(/[ (]/)[0].toLowerCase()];return e?`${n}<span class="x">${e}</span>`:n};
+const plain=s=>s.replace(/<[^>]+>/g,'');
+
+const CONTACT=[
+ ["Address",["3rd Floor, 400 D R Wijewardhana Mawatha","Colombo 10, Sri Lanka"]],
+ ["Telephone",["0112 689 368","0112 688 927"]],
+ ["Email",["nipos@sltnet.lk","trademark@nipo.gov.lk"]],
+ ["Website",["www.nipo.gov.lk"]]
+];
+
+const INTERCOM=[
+ ["Main",[["Information Desk","200"],["Shroff","206"],["ICT Office","227"],["Translator","221"]]],
+ ["Staff members",[["DG – Himali Hettihelage","205"],["AD 01 – Nishani","203"],["AD 02 – Amali","224"],["AD 03 – Prasanga Pandithasundara","211"],["AD Patent – Nalinda Athapaththu","204"],["AD Planning","202"],["AD IT","207"],["AO","219"]]],
+ ["Head of department",[["Deshanthi","222"],["Nadeeka","214"]]],
+ ["Trademark officers",[["Sithara / Prabashara / Kavith","210"],["Iroshi / Ravimini / Nayomi","212"],["Sandamali / Jayantha / Upeka","213"],["Ashani / Isuri / Naveendra","214"],["Shamali / Achini / Shashika / Sandaruwan","222"]]],
+ ["Patent division",[["Patent Info","208 / 209"],["Shashila","202"]]],
+ ["Accounts division",[["Accounts Branch","217"],["Accountant","218"]]],
+ ["Other",[["Record Room","216 / 226"],["Ebranch","215 / 220"],["Translator","221"]]]
+];
+
+const DUTIES=[
+ ["Trade Mark Search",["Kavith","Isuri","Upekha","Ravimini","Prabashwara","Sandaruwan","Nayomi","Shashika"]],
+ ["Registration",["Deshanthi","Achini","Sithara","Iroshi"]],
+ ["Publications Proceed",["Thushari","Trainee"]],
+ ["Journal Made",["Thushari"]],
+ ["Change of Names / Addresses",["Jayantha"]],
+ ["Grant Assignments",["Jayantha"]],
+ ["Renewals",["Shyamali"]],
+ ["Extensions & Fixing of Hearing",["Ajith"]],
+ ["General CR",["Jayantha"]],
+ ["Renunciation / Rectification / Cancellation / Alteration",["Ajith"]],
+ ["Copyright",["Ashani"]],
+ ["GI (Geographical Indications)",["Nadeeka","Ravimini","Isuri"]],
+ ["Agent Registration",["Nadeeka"]],
+ ["Audit Reports",["Sithara"]],
+ ["Checking / Approving Search Proposals",["Nadeeka"]]
+];
+
+/* [previous officer, [[scope, now handled by, ext]]] */
+const CHANGES=[
+ ["Amali",[["01-25","Deshanthi","222"],["26-45","Nayomi","212"]]],
+ ["Lakmini",[["01-25","Isuri","214"],["26-45","Prabashwara","210"]]],
+ ["Indika / Jayani",[["All classes","Ravimini","212"]]],
+ ["Gayan / Manoj",[["01-25","Kavith","210"],["26-45","Sandaruwan","222"]]],
+ ["Ayesha / Tenika / Prasanga / Hasith",[["All classes","Upekha","213"]]],
+ ["Dilani",[["33","Upekha","213"]]],
+ ["Rasika",[["01-25","Sithara","210"],["26-45","Jayantha","213"]]],
+ ["Sandun",[["All classes","Iroshi","212"]]],
+ ["Navoda",[["All classes","Achini","222"]]],
+ ["Nadee Tharangani",[["All classes","Jayantha","213"]]],
+ ["Nilmini",[["5","Achini","222"],["Other classes","Jayantha","213"]]],
+ ["Princy",[["01-29","Iroshi","212"],["30-45","Achini","222"]]],
+ ["Sudeera",[["Hearing / Oppositions / W-S / Renunciation / Rectification / Cancellation / Alteration","Ajith","214"]]],
+ ["Shashika",[["1-30","Nadeeka","214"],["31-45","Achini","222"],["Letters","All IPOs","214"]]],
+ ["Priyanga",[["Substantive examination","Ashani","214"],["Letters","Ashani & Iroshi","214 / 212"],["Certificates","Check Registration Unit",""]]]
+];
+
+const MONTHS_NEW=[
+ [["January","1"],["May","5"],["September","9"]],"Deshanthi","222","replaced Ashani",
+ [["February","2"],["June","6"],["October","10"]],"Achini","222","",
+ [["March","3"],["July","7"],["November","11"]],"Iroshi","212","",
+ [["April","4"],["August","8"],["December","12"]],"Sithara","210",""
+];
+const MONTHS_OLD=[
+ [["Lakmini (Tenika)","Amali","Deshanthi","Nilmini"],"Achini","222",""],
+ [["Gayan","Tharangani","Rose","Jayantha (Nadee / Dilhara)","Rasika"],"Sithara","210",""],
+ [["Prasanga","Indika (Jayani)","Priyanga"],"Iroshi","212",""],
+ [["Nadeeka","Himasha","Princy","Nimeshika"],"Deshanthi","222","replaced Ashani"]
+];
+
+/* [class label, officers, note] */
+const NICE=[
+ ["01",["Deshanthi"]],["02",["Jayantha"],"previously Nilmini"],["03",["Achini"]],["04",["Jayantha"],"previously Nadee"],
+ ["05",["Achini"],"previously Nilmini"],["06–08",["Kavith"]],["09–10",["Upekha"]],["11",["Achini"]],
+ ["12",["Jayantha"],"previously Nadee"],["13–15",["Deshanthi"]],["16",["Prabashwara"]],["17–19",["Deshanthi"]],
+ ["20",["Jayantha"]],["21",["Deshanthi","Nadeeka"]],["22",["Deshanthi"]],["23–25",["Iroshi"]],
+ ["26–27",["Deshanthi"]],["28",["Achini"]],["29",["Iroshi"],"previously Princy"],["30",["Ravimini"]],
+ ["31",["Achini"]],["32",["Nayomi"]],["33",["Sandaruwan"]],["34",["Isuri"]],
+ ["35",["Achini"],"previously Princy"],["36",["Jayantha"],"previously Nadee"],["37–39",["Nadeeka"]],["40",["Prabashwara"]],
+ ["41",["Madurangi (Shashika)"]],["42–45",["Sithara"],"previously Rose"]
+];
+
+const FEES=[
+ ["Trademark search",[["Trademark search","Rs. 177.00"]]],
+ ["Trademark application",[["Individual applicant","2,360.00"],["Registered company / proprietorship / partnership","7,080.00"],["Collective mark / certificate mark","11,800.00"]]],
+ ["Publication",null],
+ ["Registration",[["Initial cost","2,360.00"],["Each additional associated mark","590.00"]]],
+ ["Certificates and documents",[["General certificates","1,180.00"],["Priority documents","1,180.00"]]],
+ ["Renewal",[["Individual applicant","7,080.00"],["Registered company / proprietorship","9,440.00"],["Collective mark","11,800.00"],["Surcharge (up to 6 months)","+10%"]]],
+ ["Other services",[["Mark withdrawal","0.00"],["Hearing / time extension","0.00"],["Name or address change, first mark","2,030.00 (+826.00 each additional mark)"],["Assignment or transmission","4,720.00 (+1,180.00 each additional mark)"]]],
+ ["Opposition",[["Notice of opposition","4,720.00"],["Answer to notice of opposition","2,360.00"],["Hearing of opposition","2,360.00"]]],
+ ["Agent registration",[["Individual","8,142.00 (renewal 12,213.00)"],["Company","16,284.00 (renewal 24,426.00)"]]],
+ ["Application error changes",[["Clerical error","826.00"],["Errata","Varies"],["Rectification","826.00"],["Renunciation","944.00"],["Cancellation","826.00"]]],
+ ["Additional services",[["Copies of applications / documents, first page","177.00 (+88.50 each additional page)"],["Summary sheet, normal","177.00"],["Summary sheet, certified","354.00"]]]
+];
+const PUB=[["1 – 10","2,360.00","5,664.00"],["10 – 20","4,071.00","7,375.00"],["More than 20","5,664.00","8,968.00"]];
+
+const QR=[
+ ["Gazette publication","qr/gazette.png","https://documents.gov.lk/web/gazettes"],
+ ["NIPO website","qr/nipo.png","https://www.nipo.gov.lk/web/index.php?lang=en"],
+ ["WIPO website","qr/wipo.png",""],
+ ["MGS goods list","qr/mgs.png","https://webaccess.wipo.int/mgs/"],
+ ["NIPO online database","qr/database.jpg",""],
+ ["Commercial High Court judgments and orders","qr/chc.png",""],
+ ["Customs, Consumer Protection Unit","qr/customs.png",""]
+];
+
+/* ---------- Views ---------- */
+const head=(t,p)=>`<div class="vh"><h2>${t}</h2>${p?`<p>${p}</p>`:''}</div>`;
+const V={
+contact:()=>head('Contact details','Give these to visitors who ask how to reach NIPO.')+`
+<div class="contact">
+ <div class="hotline"><span>Hotline</span><strong>1934</strong><small>Call for general guidance on trademarks and other IP services.</small></div>
+ <div class="card"><dl class="rows">${CONTACT.map(([k,v])=>`<div class="row"><dt>${k}</dt><dd>${v.map(l=>`<span>${l}</span>`).join('')}</dd></div>`).join('')}</dl></div>
+</div>`,
+
+intercom:()=>head('Intercom directory','Dial the extension from any desk phone.')+
+ `<div class="grid">${INTERCOM.map(([t,r])=>`<section class="card ic"><h3>${t}</h3><ul>${r.map(([n,e])=>`<li><span>${n}</span><span class="x">${e}</span></li>`).join('')}</ul></section>`).join('')}</div>`,
+
+duties:()=>head('Officer duties','Who handles each section right now.')+
+ `<div class="grid">${DUTIES.map(([t,o])=>`<section class="card duty"><h3>${t}</h3><div>${o.map(n=>`<span>${nm(n)}</span>`).join('')}</div></section>`).join('')}</div>`,
+
+changes:()=>head('Trademark officer changes','Find the previous officer, then see who handles those classes now.')+
+ `<div class="tw"><table><thead><tr><th>Previous officer</th><th>Classes / scope</th><th>Now handled by</th><th>Ext</th></tr></thead>${
+  CHANGES.map(([o,rs])=>`<tbody class="g">${rs.map(([c,n,e],i)=>`<tr><td class="old">${i?'':o}</td><td><span class="pill">${c}</span></td><td>${n}</td><td>${e?`<span class="x" style="margin:0">${e}</span>`:''}</td></tr>`).join('')}</tbody>`).join('')
+ }</table></div>`,
+
+months:()=>{
+ let n='';for(let i=0;i<MONTHS_NEW.length;i+=4){const [m,o,e,nt]=[MONTHS_NEW[i],MONTHS_NEW[i+1],MONTHS_NEW[i+2],MONTHS_NEW[i+3]];
+  n+=`<div class="card mo"><h3>${o}<span class="x" style="font-size:.55em">${e}</span></h3>${nt?`<span class="note" style="margin:0">${nt}</span>`:''}<p>${m.map(([a,b])=>`<span>${a} <small>(${b})</small></span>`).join('')}</p></div>`}
+ return head('Registration schedule 2024 / 2025','The officer responsible depends on the month.')+`<div class="months">${n}</div>`+
+ `<h3 class="sub">Before 2024 / 2025</h3><div class="tw"><table><thead><tr><th>Team members</th><th>Primary contact</th><th>Ext</th></tr></thead><tbody>${
+  MONTHS_OLD.map(([t,o,e,nt])=>`<tr><td>${t.join('<br>')}</td><td class="old">${o}${nt?`<span class="note">${nt}</span>`:''}</td><td><span class="x" style="margin:0">${e}</span></td></tr>`).join('')}</tbody></table></div>`},
+
+nice:()=>head('Nice classes 1 to 45','Which officer examines each class.')+
+ `<div class="tw"><table><thead><tr><th>Class</th><th>Officer</th></tr></thead><tbody>${
+  NICE.map(([c,o,nt])=>`<tr><td><span class="pill">${c}</span></td><td>${o.map(nm).join('<br>')}${nt?`<span class="note">${nt}</span>`:''}</td></tr>`).join('')}</tbody></table></div>`,
+
+fees:()=>head('Trademark fees','Official fee reference in Sri Lankan rupees.')+
+ `<div class="fees">${FEES.map(([t,r])=>`<section class="card fee"><h3>${t}</h3><table>${r?r.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join(''):
+  `<tr><th>Words in good list</th><th>Design ≤ 4 cm</th><th>Design &gt; 4 cm</th></tr>${PUB.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join('')}`}</table></section>`).join('')}</div>`,
+
+links:()=>head('Quick links','Visitors can scan a code with their phone. Tap a code to enlarge it.')+
+ `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">${QR.map(([t,s,u],i)=>`<div class="card qr" tabindex="0" role="button" onclick="zoom(${i})" onkeydown="if(event.key==='Enter')zoom(${i})"><img src="${s}" alt="QR code: ${t}"><h3>${t}</h3>${u?`<a href="${u}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${u.replace(/^https?:\/\//,'')}</a>`:''}</div>`).join('')}</div>`
+};
+const TABS=[["contact","Contact"],["intercom","Intercom"],["duties","Officer duties"],["changes","Officer changes"],["months","Registration months"],["nice","Nice classes"],["fees","Fees"],["links","Quick links"]];
+const SECNAME=Object.fromEntries(TABS);
+
+/* ---------- Search index ---------- */
+const IDX=[];
+INTERCOM.forEach(([g,r])=>r.forEach(([n,e])=>IDX.push({s:'intercom',t:n,d:`${g}, ext ${e}`})));
+DUTIES.forEach(([t,o])=>IDX.push({s:'duties',t:t,d:o.join(', ')}));
+CHANGES.forEach(([o,rs])=>rs.forEach(([c,n,e])=>IDX.push({s:'changes',t:`${o} → ${n}`,d:`${c}${e?', ext '+e:''}`})));
+NICE.forEach(([c,o,nt])=>{const [a,b]=c.split('–').map(Number);const nums=[];for(let i=a;i<=(b||a);i++)nums.push(i);
+ IDX.push({s:'nice',t:`Class ${c}`,d:o.join(', ')+(nt?`, ${nt}`:''),x:nums.join(' ')})});
+FEES.forEach(([t,r])=>(r||PUB.map(p=>[`${p[0]} words`,`${p[1]} / ${p[2]}`])).forEach(([a,b])=>IDX.push({s:'fees',t:a,d:`${t}: ${b}`})));
+CONTACT.forEach(([k,v])=>IDX.push({s:'contact',t:k,d:v.join(', ')}));
+IDX.push({s:'contact',t:'Hotline',d:'1934'});
+for(let i=0;i<MONTHS_NEW.length;i+=4)IDX.push({s:'months',t:`${MONTHS_NEW[i+1]} handles registration`,d:MONTHS_NEW[i].map(m=>m[0]).join(', '),x:MONTHS_NEW[i].map(m=>m[0]+' '+m[1]).join(' ')});
+QR.forEach(([t,,u])=>IDX.push({s:'links',t:t,d:u||'QR code'}));
+IDX.forEach(i=>i.h=(i.t+' '+i.d+' '+(i.x||'')+' '+SECNAME[i.s]).toLowerCase());
+
+function search(q){
+ const toks=q.toLowerCase().replace(/\bclass(es)?\b/g,' ').split(/\s+/).filter(Boolean);
+ if(!toks.length)return [];
+ return IDX.filter(i=>{const w=i.h.split(/[^a-z0-9.]+/);return toks.every(t=>/^\d+$/.test(t)?w.some(x=>/^\d+$/.test(x)&&+x===+t):i.h.includes(t))}).slice(0,40);
+}
+
+/* ---------- App ---------- */
+const view=document.getElementById('view'),tabs=document.getElementById('tabs'),q=document.getElementById('q'),dlg=document.getElementById('dlg');
+let cur='contact';
+tabs.innerHTML=TABS.map(([id,l])=>`<button class="tab" role="tab" data-id="${id}">${l}</button>`).join('');
+function show(id){
+ cur=id;q.value='';
+ tabs.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.id===id));
+ view.innerHTML=`<div class="view">${V[id]()}</div>`;
+ scrollTo({top:0});
+}
+tabs.addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)show(b.dataset.id)});
+q.addEventListener('input',()=>{
+ const v=q.value.trim();
+ if(!v){show(cur);return}
+ const r=search(v);
+ tabs.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected','false'));
+ view.innerHTML=`<div class="view">${head(`Results for “${v.replace(/</g,'&lt;')}”`,r.length?`${r.length} found. Tap one to open its section.`:'')}${
+  r.length?`<div class="res">${r.map(i=>`<button class="hit" onclick="show('${i.s}')"><div><b>${i.t}</b><span>${i.d}</span></div><em>${SECNAME[i.s]}</em></button>`).join('')}</div>`
+  :`<div class="empty">Nothing matches that. Check the spelling, or search by extension number or class number.</div>`}</div>`;
+});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}if(e.key==='Escape'&&document.activeElement===q){q.value='';show(cur)}});
+function zoom(i){document.getElementById('dt').textContent=QR[i][0];document.getElementById('di').src=QR[i][1];dlg.showModal()}
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+show('contact');
+</script>
+</body>
+</html>

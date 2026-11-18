@@ -46,7 +46,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tab[aria-selected=true]{color:var(--teal-d);border-color:var(--saffron)}
 
 /* Content */
-main{max-width:1320px;margin:0 auto;padding:30px clamp(16px,4vw,48px) 40px}
+main{max-width:1320px;margin:0 auto;padding:30px clamp(16px,4vw,48px) 80px}
 .vh{margin-bottom:22px}
 .vh h2{font:800 clamp(26px,3vw,34px)/1.15 var(--display);letter-spacing:-.01em}
 .vh p{color:var(--muted);margin-top:4px}
@@ -136,7 +136,77 @@ dialog button{margin-top:14px;background:var(--teal);color:#fff;border:0;border-
 
 footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px}
 @media (max-width:760px){.contact{grid-template-columns:1fr}.row{grid-template-columns:1fr;gap:2px}.hot{margin-left:0}}
-@media print{.top,.tabs{display:none}}
+@media print{.top,.tabs,.ai-fab,.ai-pop{display:none!important}}
+
+/* Gemini Information Officer Popup */
+.ai-fab{
+  position:fixed;right:22px;bottom:22px;z-index:40;
+  background:var(--teal-d);color:#fff;border:2px solid var(--saffron);
+  border-radius:999px;padding:13px 20px;display:flex;align-items:center;gap:10px;
+  font:700 16px var(--display);box-shadow:0 12px 32px rgba(8,54,58,.35);
+  transition:transform .16s ease,background .16s ease;
+}
+.ai-fab:hover{transform:translateY(-2px);background:var(--teal)}
+.ai-fab svg{width:22px;height:22px;fill:var(--saffron);flex-shrink:0}
+.ai-pop{
+  position:fixed;right:22px;bottom:84px;z-index:50;
+  width:min(410px,calc(100vw - 32px));height:min(580px,calc(100vh - 110px));
+  background:var(--surface);border:1px solid var(--line);border-radius:22px;
+  box-shadow:0 20px 50px rgba(8,54,58,.28);
+  display:none;flex-direction:column;overflow:hidden;
+}
+.ai-pop.open{display:flex;animation:popIn .2s ease-out}
+@keyframes popIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.ai-head{
+  background:var(--teal-d);color:#fff;padding:14px 16px;
+  display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--saffron);
+}
+.ai-badge{
+  width:36px;height:36px;border-radius:11px 11px 11px 3px;background:var(--saffron);
+  color:var(--teal-d);display:grid;place-items:center;font:800 18px var(--display);flex-shrink:0;
+}
+.ai-title{flex:1;min-width:0}
+.ai-title h3{font:700 16px/1.2 var(--display)}
+.ai-title span{font-size:12px;color:#B9D3D0;display:block}
+.ai-icon-btn{
+  background:rgba(255,255,255,.12);border:0;color:#fff;width:32px;height:32px;
+  border-radius:9px;display:grid;place-items:center;font-size:16px;
+}
+.ai-icon-btn:hover{background:rgba(255,255,255,.22)}
+.ai-msgs{
+  flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:#F7FAFA;
+}
+.msg{max-width:86%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.45;word-wrap:break-word}
+.msg.bot{
+  align-self:flex-start;background:#fff;border:1px solid var(--line);
+  border-bottom-left-radius:4px;color:var(--ink);
+}
+.msg.user{
+  align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:4px;
+}
+.msg b{font-weight:700}
+.msg ul{padding-left:18px;margin:4px 0}
+.ai-chips{
+  padding:8px 12px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:#F7FAFA;
+}
+.ai-chips button{
+  background:var(--teal-l);color:var(--teal-d);border:0;border-radius:999px;
+  padding:5px 11px;font-size:12.5px;font-weight:600;white-space:nowrap;
+}
+.ai-chips button:hover{background:#C6DFDB}
+.ai-form{
+  display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#fff;
+}
+.ai-form input{
+  flex:1;border:1px solid var(--line);border-radius:12px;padding:10px 12px;
+  font:500 15px var(--body);color:var(--ink);
+}
+.ai-form input:focus{outline:none;border-color:var(--teal)}
+.ai-form button{
+  background:var(--teal-d);color:#fff;border:0;border-radius:12px;padding:0 16px;
+  font-weight:700;font-size:14px;
+}
+.ai-form button:disabled{opacity:.5;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -157,7 +227,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
     <input id="q" type="search" autocomplete="off" placeholder="Find an officer, extension, Nice class or fee" aria-label="Search the guide">
   </div>
-  <p class="hint">Try “Iroshi”, “212”, “class 25”, “renewal” or “opposition”. Press / to jump here.</p>
+  <p class="hint">Hi Information Officer. Have a nice day. How can i Help You...</p>
 </header>
 
 <nav class="tabs" aria-label="Sections"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
@@ -165,6 +235,39 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px
 <footer>Copyright © SANDARUWAN.NIPO</footer>
 
 <dialog id="dlg"><h3 id="dt"></h3><img id="di" alt=""><br><button onclick="dlg.close()">Close</button></dialog>
+
+<!-- Gemini Information Officer Floating Button & Popup -->
+<button class="ai-fab" id="aiFab" type="button" aria-expanded="false" aria-controls="aiPop">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.2 16.8 11.4 22 12C16.8 12.6 12.6 16.8 12 22C11.4 16.8 7.2 12.6 2 12C7.2 11.4 11.4 7.2 12 2Z"/></svg>
+  <span>Gemini Info Officer</span>
+</button>
+
+<aside class="ai-pop" id="aiPop" role="dialog" aria-label="Gemini Information Officer Assistant">
+  <div class="ai-head">
+    <div class="ai-badge" aria-hidden="true">✦</div>
+    <div class="ai-title">
+      <h3>Gemini Information Officer</h3>
+      <span>NIPO Desk AI Assistant</span>
+    </div>
+    <button class="ai-icon-btn" id="aiClose" type="button" title="Close assistant" aria-label="Close assistant">✕</button>
+  </div>
+
+  <div class="ai-msgs" id="aiMsgs">
+    <div class="msg bot">Ayubowan! I am the <b>NIPO Gemini Information Officer</b>. Ask me about officer extensions, Nice classes (1–45), fee schedules, registration months, or officer handovers.</div>
+  </div>
+
+  <div class="ai-chips" id="aiChips">
+    <button type="button" data-q="Who handles Class 25 and what is their extension?">Class 25 officer?</button>
+    <button type="button" data-q="What are the trademark application fees for an individual vs a company?">Application fees</button>
+    <button type="button" data-q="Who took over Lakmini's classes?">Lakmini handover</button>
+    <button type="button" data-q="Who handles registration in August?">August registration</button>
+  </div>
+
+  <form class="ai-form" id="aiForm">
+    <input type="text" id="aiInput" placeholder="Ask the Information Officer..." autocomplete="off" required>
+    <button type="submit" id="aiSend">Send</button>
+  </form>
+</aside>
 
 <script>
 /* ---------- Data ---------- */
@@ -357,10 +460,140 @@ q.addEventListener('input',()=>{
   r.length?`<div class="res">${r.map(i=>`<button class="hit" onclick="show('${i.s}')"><div><b>${i.t}</b><span>${i.d}</span></div><em>${SECNAME[i.s]}</em></button>`).join('')}</div>`
   :`<div class="empty">Nothing matches that. Check the spelling, or search by extension number or class number.</div>`}</div>`;
 });
-document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}if(e.key==='Escape'&&document.activeElement===q){q.value='';show(cur)}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==q&&!e.target.closest('.ai-pop')){e.preventDefault();q.focus()}
+  if(e.key==='Escape'){
+    if(aiPop.classList.contains('open'))toggleAI(false);
+    else if(document.activeElement===q){q.value='';show(cur)}
+  }
+});
 function zoom(i){document.getElementById('dt').textContent=QR[i][0];document.getElementById('di').src=QR[i][1];dlg.showModal()}
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 show('contact');
+
+/* ---------- Gemini Information Officer AI ---------- */
+const aiFab=document.getElementById('aiFab'),
+      aiPop=document.getElementById('aiPop'),
+      aiClose=document.getElementById('aiClose'),
+      aiMsgs=document.getElementById('aiMsgs'),
+      aiChips=document.getElementById('aiChips'),
+      aiForm=document.getElementById('aiForm'),
+      aiInput=document.getElementById('aiInput'),
+      aiSend=document.getElementById('aiSend');
+
+// PASTE YOUR API KEY DIRECTLY HERE:
+const GEMINI_KEY="AQ.Ab8RN6LuEAn7wNkCsiyO0xxGbwFdj8l2gMAinEB5b_t5l0YdhA";
+
+function toggleAI(force){
+  const open=typeof force==='boolean'?force:!aiPop.classList.contains('open');
+  aiPop.classList.toggle('open',open);
+  aiFab.setAttribute('aria-expanded',String(open));
+  if(open)setTimeout(()=>aiInput.focus(),80);
+}
+aiFab.addEventListener('click',()=>toggleAI());
+aiClose.addEventListener('click',()=>toggleAI(false));
+
+// Build complete NIPO knowledge base from the existing data structures
+const NIPO_KB=JSON.stringify({
+  hotline:"1934",
+  infoDeskExt:"200",
+  contact:CONTACT,
+  intercom:INTERCOM,
+  officerDuties:DUTIES,
+  officerChanges:CHANGES,
+  registrationMonths2024_2025:MONTHS_NEW,
+  registrationMonthsBefore2024:MONTHS_OLD,
+  niceClasses:NICE,
+  feesLKR:FEES,
+  publicationFeesLKR:PUB,
+  quickLinks:QR.map(([t,,u])=>({title:t,url:u}))
+});
+
+const SYSTEM_PROMPT=`You are the official Gemini Information Officer at the National Intellectual Property Office (NIPO) of Sri Lanka Information Desk.
+Help counter officers and visitors quickly and accurately using ONLY the NIPO directory data below.
+Rules:
+- Always include the relevant desk extension number (e.g., Ext 212) when naming an officer.
+- Quote fees clearly in Sri Lankan Rupees (Rs.).
+- Be concise, polite, and practical for a busy front-desk environment.
+- If a question is outside the provided NIPO guide data, state clearly that it is not listed in the current NIPO guide (updated 13.08.2026) and suggest calling Hotline 1934 or Info Desk Ext 200.
+
+NIPO DIRECTORY DATA:
+${NIPO_KB}`;
+
+const chatHistory=[];
+
+function formatText(t){
+  return t
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/\n/g,'<br>');
+}
+
+function appendMsg(role,text){
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  div.innerHTML=formatText(text);
+  aiMsgs.appendChild(div);
+  aiMsgs.scrollTop=aiMsgs.scrollHeight;
+  return div;
+}
+
+async function askGemini(question){
+  if(!GEMINI_KEY || GEMINI_KEY.includes('...')){
+    appendMsg('bot','Please paste your valid **Gemini API Key** in the JavaScript section of the file (`const GEMINI_KEY = "..."`).');
+    return;
+  }
+  appendMsg('user',question);
+  aiInput.value='';
+  aiSend.disabled=true;
+  const loader=appendMsg('bot','Checking NIPO directory...');
+
+  chatHistory.push({role:'user',parts:[{text:question}]});
+
+  // Using gemini-2.0-flash for lightning-fast responses (<1 sec)
+  const models=['gemini-2.0-flash', 'gemini-1.5-flash'];
+  let reply=null,lastErr='';
+
+  for(const model of models){
+    try{
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},
+          contents:chatHistory
+        })
+      });
+      const data=await res.json();
+      if(!res.ok)throw new Error(data.error?.message||`HTTP ${res.status}`);
+      reply=data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(reply)break;
+    }catch(err){
+      lastErr=err.message;
+    }
+  }
+
+  if(reply){
+    loader.innerHTML=formatText(reply);
+    chatHistory.push({role:'model',parts:[{text:reply}]});
+  }else{
+    chatHistory.pop();
+    loader.innerHTML=formatText(`Could not connect to Gemini API (${lastErr}). Please verify your API key.`);
+  }
+  aiSend.disabled=false;
+  aiMsgs.scrollTop=aiMsgs.scrollHeight;
+}
+
+aiForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const text=aiInput.value.trim();
+  if(text)askGemini(text);
+});
+
+aiChips.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-q]');
+  if(btn)askGemini(btn.dataset.q);
+});
 </script>
 </body>
 </html>

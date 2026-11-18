@@ -227,7 +227,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:6px 16px 28px
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
     <input id="q" type="search" autocomplete="off" placeholder="Find an officer, extension, Nice class or fee" aria-label="Search the guide">
   </div>
-  <p class="hint">Hi Information Officer. Have a nice day. How can i Help You...</p>
+  <p class="hint">Try “Iroshi”, “212”, “class 25”, “renewal” or “opposition”. Press / to jump here.</p>
 </header>
 
 <nav class="tabs" aria-label="Sections"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
@@ -370,7 +370,7 @@ const FEES=[
 const PUB=[["1 – 10","2,360.00","5,664.00"],["10 – 20","4,071.00","7,375.00"],["More than 20","5,664.00","8,968.00"]];
 
 const QR=[
- ["Gazette publication","qr/gazette.png","https://documents.gov.lk/web/gazettes"],
+ ["Gazette publication","gazette.png","https://documents.gov.lk/web/gazettes"],
  ["NIPO website","qr/nipo.png","https://www.nipo.gov.lk/web/index.php?lang=en"],
  ["WIPO website","qr/wipo.png",""],
  ["MGS goods list","qr/mgs.png","https://webaccess.wipo.int/mgs/"],
@@ -481,8 +481,8 @@ const aiFab=document.getElementById('aiFab'),
       aiInput=document.getElementById('aiInput'),
       aiSend=document.getElementById('aiSend');
 
-// PASTE YOUR API KEY DIRECTLY HERE:
-const GEMINI_KEY="AQ.Ab8RN6K9Yvf10MQ0Jb5_u9JW5H6LeZT8C5msgrk7VTFjssc9oQ";
+// API Key integrated
+const GEMINI_KEY="AQ.Ab8RN6L4bk3fwJydVmbKguOmk7RdKcOQ2N4oNpMHDr5kg3uxPQ";
 
 function toggleAI(force){
   const open=typeof force==='boolean'?force:!aiPop.classList.contains('open');
@@ -521,6 +521,7 @@ NIPO DIRECTORY DATA:
 ${NIPO_KB}`;
 
 const chatHistory=[];
+let activeModel=null;
 
 function formatText(t){
   return t
@@ -538,9 +539,44 @@ function appendMsg(role,text){
   return div;
 }
 
+async function resolveModels(){
+  if(activeModel) return [activeModel];
+  const candidates=['gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.5-pro','gemini-3-flash-preview'];
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(GEMINI_KEY)}`);
+    if(res.ok){
+      const data=await res.json();
+      const valid=(data.models||[])
+        .filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent'))
+        .map(m=>m.name.replace(/^models\//,''));
+      const flash=valid.find(n=>n.includes('flash') && !n.includes('8b') && !n.includes('thinking'));
+      const any=valid[0];
+      if(flash) candidates.unshift(flash);
+      else if(any) candidates.unshift(any);
+    }
+  }catch(_){}
+  return [...new Set(candidates)];
+}
+
+async function callEndpoint(baseUrl, model){
+  const res=await fetch(`${baseUrl}/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},
+      contents:chatHistory
+    })
+  });
+  const data=await res.json();
+  if(!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
+  const text=data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if(!text) throw new Error('Empty response');
+  return text;
+}
+
 async function askGemini(question){
-  if(!GEMINI_KEY || GEMINI_KEY.includes('...')){
-    appendMsg('bot','Please paste your valid **Gemini API Key** in the JavaScript section of the file (`const GEMINI_KEY = "..."`).');
+  if(!GEMINI_KEY){
+    appendMsg('bot','API key is not configured.');
     return;
   }
   appendMsg('user',question);
@@ -550,26 +586,25 @@ async function askGemini(question){
 
   chatHistory.push({role:'user',parts:[{text:question}]});
 
-  // Using gemini-2.0-flash for lightning-fast responses (<1 sec)
-  const models=['gemini-2.0-flash', 'gemini-1.5-flash'];
+  const models=await resolveModels();
+  const endpoints=[
+    'https://generativelanguage.googleapis.com/v1beta',
+    'https://aiplatform.googleapis.com/v1/publishers/google'
+  ];
   let reply=null,lastErr='';
 
-  for(const model of models){
-    try{
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},
-          contents:chatHistory
-        })
-      });
-      const data=await res.json();
-      if(!res.ok)throw new Error(data.error?.message||`HTTP ${res.status}`);
-      reply=data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if(reply)break;
-    }catch(err){
-      lastErr=err.message;
+  outer:
+  for(const ep of endpoints){
+    for(const model of models){
+      try{
+        reply=await callEndpoint(ep, model);
+        if(reply){
+          activeModel=model;
+          break outer;
+        }
+      }catch(err){
+        lastErr=err.message;
+      }
     }
   }
 
@@ -578,7 +613,7 @@ async function askGemini(question){
     chatHistory.push({role:'model',parts:[{text:reply}]});
   }else{
     chatHistory.pop();
-    loader.innerHTML=formatText(`Could not connect to Gemini API (${lastErr}). Please verify your API key.`);
+    loader.innerHTML=formatText(`Could not connect to Gemini API (${lastErr}). Please check your API key permissions in Google AI Studio / Cloud Console.`);
   }
   aiSend.disabled=false;
   aiMsgs.scrollTop=aiMsgs.scrollHeight;
